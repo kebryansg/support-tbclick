@@ -1,0 +1,103 @@
+<main>
+    <section class="section section-shaped section-lg">
+        <div class="container pt-lg-md">
+            <div class="card bg-secondary shadow border-0">
+                <div class="card-header bg-white pb-3">
+
+                    <button type="button" class="btn btn-default" (click)="showPedido =true">
+                        <span>Pedidos</span>
+                        <span class="badge badge-primary badge-white">
+                            {{(listPedido$ | async)?.length}}
+                        </span>
+                    </button>
+                    <button type="button" class="btn btn-primary" (click)="showPedido =false">
+                        <span>Soporte</span>
+                        <span class="badge badge-primary">
+                            {{(listProblema$ | async)?.length}}
+                        </span>
+                    </button>
+
+                </div>
+                <div class="card-body">
+
+                    <div class="table-responsive">
+
+                        <div>
+                            <table class="table align-items-center table-dark" *ngIf="showPedido">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col" class="sort" data-sort="budget">Acción</th>
+                                    <th scope="col" class="sort" data-sort="budget">Titulo</th>
+                                    <th scope="col" class="sort" data-sort="status">Año</th>
+                                    <th scope="col" class="sort" data-sort="status">Solicita</th>
+                                </tr>
+                                </thead>
+                                <tbody class="list">
+
+                                <tr *ngFor="let pedido of listPedido$ | async">
+                                    <td>
+                                        <button class="btn btn-sm btn-icon btn-danger" type="button"
+                                                (click)="eliminarPedido(pedido.id)">
+                                            <span class="btn-inner--icon">
+                                                <i class="fa fa-close"></i>
+                                            </span>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        {{pedido.data?.title | uppercase}}
+                                    </td>
+                                    <td>
+                                        {{pedido.data?.anio}}
+                                    </td>
+                                    <td>
+                                        {{pedido.data?.email}}
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table align-items-center table-dark" *ngIf="!showPedido">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col" class="sort" data-sort="action">Acción</th>
+                                    <th scope="col" class="sort" data-sort="budget">Opción</th>
+                                    <th scope="col" class="sort" data-sort="description">
+                                        Descripción
+                                    </th>
+                                    <th scope="col" class="sort" data-sort="status">Solicita</th>
+                                </tr>
+                                </thead>
+                                <tbody class="list">
+
+                                <tr *ngFor="let problema of listProblema$ | async">
+                                    <td>
+                                        <button class="btn btn-sm btn-icon btn-danger" type="button"
+                                                (click)="eliminarProblema(problema.id)">
+                                            <span class="btn-inner--icon">
+                                                <i class="fa fa-close"></i>
+                                            </span>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        {{problema.data?.opcion | uppercase}}
+                                    </td>
+                                    <td>
+                                        {{problema.data?.descripcion}}
+
+                                    </td>
+                                    <td class="sort">
+                                        {{problema.data?.email}}
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
