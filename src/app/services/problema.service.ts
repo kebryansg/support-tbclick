@@ -31,6 +31,14 @@ export class ProblemaService {
             );
     }
 
+    getItemsSeccions() {
+        return this.afd.collection('seccion')
+            .snapshotChanges()
+            .pipe(
+                map(results => results.map(row => row.payload.doc.data()))
+            );
+    }
+
     setItems(data: any) {
         return this.afd.collection(collectionProblema)
             .add(data);

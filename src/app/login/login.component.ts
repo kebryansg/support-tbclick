@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ProblemaService} from '../services/problema.service';
 import {PedidoService} from '../services/pedido.service';
 import {Observable} from 'rxjs';
+import {take} from 'rxjs/operators';
 
 @Component({
     selector: 'app-login',
@@ -17,6 +18,7 @@ export class LoginComponent implements OnInit {
     itemFormProblema: FormGroup;
 
     lsSelectOption$: Observable<any>;
+    lsSeccion$: Observable<any>;
 
     dominioEmail: string = 'tbclick.ec';
 
@@ -26,7 +28,8 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.lsSelectOption$ = this.problemaService.getItemsOptions();
+        this.lsSelectOption$ = this.problemaService.getItemsOptions().pipe(take(1));
+        this.lsSeccion$ = this.problemaService.getItemsSeccions().pipe(take((1)));
         this.buildFormPedido();
         this.buildFormProblema();
     }
@@ -42,6 +45,7 @@ export class LoginComponent implements OnInit {
     buildFormProblema() {
         this.itemFormProblema = this.fb.group({
             email: ['', [Validators.required, Validators.email, Validators.pattern(`^.+@${this.dominioEmail}$`)]],
+            seccion: ['', Validators.required],
             opcion: ['', Validators.required],
             descripcion: ['', Validators.required]
         });
