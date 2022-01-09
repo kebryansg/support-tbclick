@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PedidoService} from '../services/pedido.service';
 import {ProblemaService} from '../services/problema.service';
-import {Observable, Subject} from 'rxjs';
-import {takeUntil, tap} from 'rxjs/operators';
+import {from, Observable, Subject} from 'rxjs';
+import {map, takeUntil, tap} from 'rxjs/operators';
 
 @Component({
     selector: 'app-operation',
@@ -10,9 +10,10 @@ import {takeUntil, tap} from 'rxjs/operators';
     styleUrls: ['./operation.component.css']
 })
 export class OperationComponent implements OnInit, OnDestroy {
-    showPedido: boolean = true;
+    tipoSolicitud: 'PED' | 'PRO' = 'PED';
 
     destroy$: Subject<any> = new Subject<any>();
+    listItems$: Observable<any>;
     listPedido$: Observable<any>;
     listProblema$: Observable<any>;
 
@@ -21,6 +22,8 @@ export class OperationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.setTipoSolicitud('PED');
+        /*
         this.listPedido$ = this.pedidoService.getItems()
             .pipe(
                 tap(console.log),
@@ -29,6 +32,7 @@ export class OperationComponent implements OnInit, OnDestroy {
 
         this.listProblema$ = this.problemaService.getItems()
             .pipe(takeUntil(this.destroy$));
+        */
     }
 
     ngOnDestroy(): void {
@@ -44,6 +48,48 @@ export class OperationComponent implements OnInit, OnDestroy {
     eliminarProblema(cod: string) {
         this.problemaService.deleteItems(cod)
             .then();
+    }
+
+    async eliminarRegistro(cod: string) {
+        await (this.tipoSolicitud == 'PED' ? this.pedidoService.deleteItems(cod)
+            : this.problemaService.deleteItems(cod));
+    }
+
+    setTipoSolicitud(tipo: 'PED' | 'PRO') {
+        this.tipoSolicitud = tipo;
+
+        this.listItems$ = from(tipo == 'PED' ? this.pedidoService.getItems()
+            : this.problemaService.getItems())
+            .pipe(
+                tap(console.log),
+                map(ls =>
+                    ls.map(({id, data}) => ({
+                        id,
+                        ...data
+                    }))
+                ),
+                takeUntil(this.destroy$)
+            );
+    }
+
+    setColumns(tipo: 'PED' | 'PRO') {
+        const columns = {
+            'PED': [
+                'Acción',
+                'Sección',
+                'Titulo',
+                'Año',
+                'Solicita',
+            ],
+            'PRO': [
+                'Acción',
+                'Sección',
+                'Opción',
+                'Descripción',
+                'Solicita',
+            ],
+        };
+        return columns[tipo] ?? [];
     }
 
 }

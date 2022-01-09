@@ -4,13 +4,15 @@
             <div class="card bg-secondary shadow border-0">
                 <div class="card-header bg-white pb-3">
 
-                    <button type="button" class="btn btn-default" (click)="showPedido =true">
+                    <button type="button" class="btn btn-default"
+                            (click)="setTipoSolicitud('PED')">
                         <span>Pedidos</span>
                         <span class="badge badge-primary badge-white">
                             {{(listPedido$ | async)?.length}}
                         </span>
                     </button>
-                    <button type="button" class="btn btn-primary" (click)="showPedido =false">
+                    <button type="button" class="btn btn-primary"
+                            (click)="setTipoSolicitud('PRO')">
                         <span>Soporte</span>
                         <span class="badge badge-primary">
                             {{(listProblema$ | async)?.length}}
@@ -23,10 +25,64 @@
                     <div class="table-responsive">
 
                         <div>
+                            <table class="table align-items-center table-dark">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col" class="sort" data-sort="budget"
+                                        *ngFor="let column of setColumns(tipoSolicitud)">
+                                        {{column}}
+                                    </th>
+                                    <!--<th scope="col" class="sort" data-sort="budget">Acción</th>
+                                    <th scope="col" class="sort" data-sort="budget">Sección</th>
+                                    <th scope="col" class="sort" data-sort="budget">Titulo</th>
+                                    <th scope="col" class="sort" data-sort="status">Año</th>
+                                    <th scope="col" class="sort" data-sort="status">Solicita</th>-->
+                                </tr>
+                                </thead>
+                                <tbody class="list">
+
+                                <tr *ngFor="let item of listItems$ | async">
+                                    <td>
+                                        <button class="btn btn-sm btn-icon btn-danger"
+                                                (click)="eliminarRegistro(item.id)"
+                                                type="button">
+                                            <span class="btn-inner--icon">
+                                                <i class="fa fa-close"></i>
+                                            </span>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        {{item.seccion | uppercase}}
+                                    </td>
+
+                                    <td *ngIf="tipoSolicitud == 'PED'">
+                                        {{(item.title) | uppercase}}
+                                    </td>
+                                    <td *ngIf="tipoSolicitud == 'PED'">
+                                        {{item.anio}}
+                                    </td>
+
+                                    <td *ngIf="tipoSolicitud == 'PRO'">
+                                        {{item.opcion | uppercase}}
+                                    </td>
+                                    <td *ngIf="tipoSolicitud == 'PRO'">
+                                        {{item.descripcion}}
+                                    </td>
+
+                                    <td>
+                                        {{item.email}}
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <!--
                             <table class="table align-items-center table-dark" *ngIf="showPedido">
                                 <thead class="thead-dark">
                                 <tr>
                                     <th scope="col" class="sort" data-sort="budget">Acción</th>
+                                    <th scope="col" class="sort" data-sort="budget">Sección</th>
                                     <th scope="col" class="sort" data-sort="budget">Titulo</th>
                                     <th scope="col" class="sort" data-sort="status">Año</th>
                                     <th scope="col" class="sort" data-sort="status">Solicita</th>
@@ -44,6 +100,10 @@
                                         </button>
                                     </td>
                                     <td>
+                                        {{pedido.data?.seccion | uppercase}}
+                                    </td>
+
+                                    <td>
                                         {{pedido.data?.title | uppercase}}
                                     </td>
                                     <td>
@@ -52,7 +112,6 @@
                                     <td>
                                         {{pedido.data?.email}}
                                     </td>
-
                                 </tr>
                                 </tbody>
                             </table>
@@ -97,6 +156,7 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            -->
                         </div>
 
                     </div>

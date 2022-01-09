@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
     buildFormPedido() {
         this.itemFormPedido = this.fb.group({
             email: ['', [Validators.required, Validators.email, Validators.pattern(`^.+@${this.dominioEmail}$`)]],
+            seccion: ['', Validators.required],
             title: ['', Validators.required],
             anio: ['', Validators.required],
         });
